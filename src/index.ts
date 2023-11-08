@@ -1,10 +1,8 @@
-const PORT = Number(process.env.PORT);
+import "dotenv/config";
+import { createHttpServer, launchHttpServer } from "./httpServer";
+import { HTTP_SERVER_PORT } from "./utils/env";
+import createDatabaseConnection from "./db";
 
-const server = Bun.serve({
-  port: PORT,
-  fetch(req: Request) {
-    return new Response(`Bun!`);
-  },
-});
+export const db = await createDatabaseConnection();
 
-console.log(`Listening on http://localhost:${server.port} ...`);
+launchHttpServer(createHttpServer(), HTTP_SERVER_PORT);

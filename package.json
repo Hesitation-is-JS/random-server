@@ -3,9 +3,18 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "bun run src/index.ts"
+    "dev": "bun --hot run src/index.ts",
+    "dev:docker": "bun run db:dev:restart && bun --hot run src/index.ts",
+    "db:dev:rm": "docker compose rm dev-db -s -f -v",
+    "db:dev:up": "docker compose up dev-db -d",
+    "db:dev:restart": "bun run db:dev:rm && bun run db:dev:up && sleep 15 && bun run drizzle:generate",
+    "db:test:rm": "docker compose rm test-db -s -f -v",
+    "db:test:up": "docker compose up test-db -d",
+    "db:test:restart": "bun run db:test:rm && bun run db:test:up && sleep 3 && bun run drizzle:generate",
+    "drizzle:generate": "drizzle-kit generate:mysql --config=drizzle.config.ts"
   },
   "devDependencies": {
+    "@types/uuid": "^9.0.6",
     "bun-types": "^1.0.1",
     "dotenv": "^16.3.1",
     "drizzle-kit": "^0.19.13"
@@ -14,6 +23,14 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "drizzle-orm": "^0.28.6"
+    "@clerk/fastify": "^0.6.20",
+    "@fastify/swagger": "^8.12.0",
+    "@fastify/swagger-ui": "^1.10.1",
+    "drizzle-orm": "^0.28.6",
+    "drizzle-zod": "^0.5.1",
+    "fastify": "^4.24.3",
+    "mysql2": "^3.6.3",
+    "pino-pretty": "^10.2.3",
+    "uuid": "^9.0.1"
   }
 }

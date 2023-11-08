@@ -1,13 +1,12 @@
 import type { Config } from "drizzle-kit";
+import { DB_URL } from "./src/utils/env";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-const DB_URL = String(process.env.DB_URL);
-
 export default {
-  schema: "./schema/*",
+  schema: "./src/db/schema/*.ts",
   out: "./drizzle",
-  driver: "pg",
+  driver: "mysql2",
   dbCredentials: {
     connectionString: DB_URL,
   },
