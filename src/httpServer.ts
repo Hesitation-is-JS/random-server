@@ -1,9 +1,35 @@
-import Fastify, { FastifyInstance } from "fastify";
+import Fastify, {
+  FastifyInstance,
+  FastifyReply,
+  FastifyRequest,
+} from "fastify";
 import { clerkPlugin } from "@clerk/fastify";
 import globalErrorHandler from "./utils/error";
-import { FastifySwaggerUiOptions } from "@fastify/swagger-ui";
+import { SwaggerOptions } from "@fastify/swagger";
+
+declare module "fastify" {
+  interface FastifyReply {
+    startTime: number;
+  }
+}
 
 const GLOBAL_PREFIX = "api";
+
+const swaggerOptions: SwaggerOptions = {
+  swagger: {
+    info: {
+      title: "Test swagger",
+      description: "Testing the Fastify swagger API",
+      version: "0.1.0",
+    },
+    host: "localhost",
+    schemes: ["http"],
+    consumes: ["application/json"],
+    produces: ["application/json"],
+    tags: [],
+    definitions: {},
+  },
+};
 
 export function createHttpServer(): FastifyInstance {
   const fastify = Fastify({
@@ -15,55 +41,34 @@ export function createHttpServer(): FastifyInstance {
     disableRequestLogging: true,
   });
 
-  fastify.register(clerkPlugin);
-  fastify.register(import("@fastify/swagger"), {
-    swagger: {
-      info: {
-        title: "Test swagger",
-        description: "Testing the Fastify swagger API",
-        version: "0.1.0",
-      },
-      externalDocs: {
-        url: "https://swagger.io",
-        description: "Find more info here",
-      },
-      host: "localhost",
-      schemes: ["http"],
-      consumes: ["application/json"],
-      produces: ["application/json"],
-      tags: [
-        { name: "user", description: "User related end-points" },
-        { name: "code", description: "Code related end-points" },
-      ],
-      definitions: {
-        User: {
-          type: "object",
-          required: ["id", "email"],
-          properties: {
-            id: { type: "string", format: "uuid" },
-            firstName: { type: "string" },
-            lastName: { type: "string" },
-            email: { type: "string", format: "email" },
-          },
-        },
-      },
-      securityDefinitions: {
-        apiKey: {
-          type: "apiKey",
-          name: "apiKey",
-          in: "header",
-        },
-      },
-    },
+  fastify.addHook("onRequest", (_, reply: FastifyReply, done: any) => {
+    reply.startTime = Date.now();
+    done();
   });
+  fastify.addHook(
+    "onResponse",
+    (req: FastifyRequest, reply: FastifyReply, done: any) => {
+      const method = req.raw.method;
+      const url = req.raw.url;
+      const status = reply.raw.statusCode;
+      const durationMs = Date.now() - reply.startTime;
+      fastify.log.info(
+        `${method}:${url} | status: ${status} | duration: ${durationMs}ms`
+      );
+      done();
+    }
+  );
+
+  fastify.register(clerkPlugin);
+  fastify.register(import("@fastify/swagger"), swaggerOptions);
   fastify.register(import("@fastify/swagger-ui"), {
     routePrefix: GLOBAL_PREFIX + "/docs",
   });
 
   fastify.setErrorHandler(globalErrorHandler);
 
-  fastify.register(import("./todo/router"), {
-    prefix: GLOBAL_PREFIX + "/todo",
+  fastify.register(import("./user/router"), {
+    prefix: GLOBAL_PREFIX + "/user",
   });
 
   return fastify;
