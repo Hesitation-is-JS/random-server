@@ -1,11 +1,16 @@
-import { mysqlTable, serial, varchar } from "drizzle-orm/mysql-core";
+import { sql } from "drizzle-orm";
+import {
+  mysqlTable,
+  serial,
+  mysqlEnum,
+  timestamp,
+} from "drizzle-orm/mysql-core";
 
 const users = mysqlTable("users", {
-  id: serial("id").primaryKey(),
-  firstName: varchar("firstName", { length: 256 }),
-  lastName: varchar("lastName", { length: 256 }),
-  username: varchar("username", { length: 256 }),
-  password: varchar("password", { length: 256 }),
+  userId: serial("id").primaryKey().notNull(),
+  theme: mysqlEnum("theme", ["DARK", "LIGHT"]).default("DARK"),
+  createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });
 
 export default users;
