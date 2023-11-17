@@ -1,16 +1,10 @@
-interface Property {
-  [key: string]: {
-    type: "object" | "array" | "null" | "string" | "number" | "boolean" | "any";
-  };
-}
-
-export interface ResponseSchema {
-  [key: number]: BaseSchema;
-}
-
 export interface BaseSchema {
   type: "object";
-  properties: Property;
+  properties: {
+    [key: string]: {
+      type: "object" | "array" | "null" | "string" | "number" | "boolean";
+    };
+  };
   required?: string[];
 }
 
@@ -19,7 +13,9 @@ export interface ValidationSchema {
   querystring?: BaseSchema;
   params?: BaseSchema;
   headers?: BaseSchema;
-  response?: ResponseSchema;
+  response?: {
+    [key: string]: BaseSchema;
+  };
   summary?: string;
   description?: string;
   tags?: string[];
