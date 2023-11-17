@@ -1,14 +1,6 @@
 import { ResponseSchema } from "./interfaces";
 
-export const responseSchema: ResponseSchema = {
-  "200": {
-    type: "object",
-    properties: {
-      success: { type: "boolean" },
-      message: { type: "string" },
-      data: { type: "array" },
-    },
-  },
+export const baseResponseSchema: ResponseSchema = {
   "4xx": {
     type: "object",
     properties: {
@@ -27,14 +19,37 @@ export const responseSchema: ResponseSchema = {
   },
 };
 
-export const findOneResponseSchema: ResponseSchema = {
-  ...responseSchema,
+export const defaultSuccessSchema: ResponseSchema = {
+  ...baseResponseSchema,
   "2xx": {
     type: "object",
     properties: {
       success: { type: "boolean" },
       message: { type: "string" },
-      data: { type: "object" },
+    },
+  },
+};
+
+export const findOneResponseSchema: ResponseSchema = {
+  ...baseResponseSchema,
+  "2xx": {
+    type: "object",
+    properties: {
+      success: { type: "boolean" },
+      message: { type: "string" },
+      data: { type: "array" },
+    },
+  },
+};
+
+export const findManyResponseSchema: ResponseSchema = {
+  ...baseResponseSchema,
+  "2xx": {
+    type: "object",
+    properties: {
+      success: { type: "boolean" },
+      message: { type: "string" },
+      data: { type: "array" },
     },
   },
 };

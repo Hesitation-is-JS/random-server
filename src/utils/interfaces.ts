@@ -8,6 +8,10 @@ export interface BaseSchema {
   required?: string[];
 }
 
+export interface ResponseSchema {
+  [key: string]: BaseSchema;
+}
+
 export interface ValidationSchema {
   body?: BaseSchema;
   querystring?: BaseSchema;

@@ -31,16 +31,21 @@ export default function globalErrorHandler(
       break;
   }
 
-  rep.code(statusCode).send({ message: message });
+  rep.code(statusCode).send({ message: message, success: false });
 }
 
 interface HttpErrorResponse {
   message: string;
   status: number;
+  success: boolean;
 }
 
 export class HttpError extends Error {
-  constructor(public message: string, public status: number) {
+  constructor(
+    public message: string,
+    public status: number,
+    public success: boolean = false
+  ) {
     super(message);
   }
 
@@ -48,6 +53,7 @@ export class HttpError extends Error {
     return {
       message: this.message,
       status: this.status,
+      success: this.success,
     };
   }
 }

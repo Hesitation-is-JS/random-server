@@ -7,6 +7,8 @@ export async function clerkPreHandler(
   _reply: FastifyReply,
   done: any
 ) {
+  console.log("test");
+
   const { sessionId } = getAuth(req);
 
   if (!sessionId) {

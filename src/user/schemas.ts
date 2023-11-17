@@ -1,6 +1,6 @@
 import users from "../db/schema/user";
 import { ValidationSchema } from "../utils/interfaces";
-import { responseSchema, findOneResponseSchema } from "../utils/schemas";
+import { defaultSuccessSchema, findOneResponseSchema } from "../utils/schemas";
 
 export type CreateUser = typeof users.$inferInsert;
 export type UpdateUser = { theme?: "DARK" | "LIGHT" | null | undefined };
@@ -17,7 +17,7 @@ export const createUserSchema: ValidationSchema = {
     },
     required: ["userId"],
   },
-  response: responseSchema,
+  response: defaultSuccessSchema,
 };
 
 export const finOneUserSchema: ValidationSchema = {
