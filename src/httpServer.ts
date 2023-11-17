@@ -5,31 +5,14 @@ import Fastify, {
 } from "fastify";
 import { clerkPlugin } from "@clerk/fastify";
 import globalErrorHandler from "./utils/error";
-import { SwaggerOptions } from "@fastify/swagger";
+import cors from "@fastify/cors";
+import { GLOBAL_PREFIX, swaggerOptions } from "./utils/utils";
 
 declare module "fastify" {
   interface FastifyReply {
     startTime: number;
   }
 }
-
-const GLOBAL_PREFIX = "api";
-
-const swaggerOptions: SwaggerOptions = {
-  swagger: {
-    info: {
-      title: "Test swagger",
-      description: "Testing the Fastify swagger API",
-      version: "0.1.0",
-    },
-    host: "localhost",
-    schemes: ["http"],
-    consumes: ["application/json"],
-    produces: ["application/json"],
-    tags: [],
-    definitions: {},
-  },
-};
 
 export function createHttpServer(): FastifyInstance {
   const fastify = Fastify({
@@ -40,6 +23,8 @@ export function createHttpServer(): FastifyInstance {
     },
     disableRequestLogging: true,
   });
+
+  fastify.register(cors, { origin: "*" });
 
   fastify.addHook("onRequest", (_, reply: FastifyReply, done: any) => {
     reply.startTime = Date.now();
@@ -71,9 +56,9 @@ export function createHttpServer(): FastifyInstance {
     prefix: GLOBAL_PREFIX + "/user",
   });
 
-  fastify.all("*", (_req, rep) => {
-    rep.code(404).send({ message: "Route not found", success: false });
-  });
+  // fastify.all("*", (_req, rep) => {
+  //   rep.code(404).send({ message: "Route not found", success: false });
+  // });
 
   return fastify;
 }
