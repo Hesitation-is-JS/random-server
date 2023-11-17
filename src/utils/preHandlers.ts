@@ -8,6 +8,7 @@ export async function clerkPreHandler(
   done: any
 ) {
   const { sessionId } = getAuth(req);
+
   if (!sessionId) {
     throw new HttpUnauthorized();
   }

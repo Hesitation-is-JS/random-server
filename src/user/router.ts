@@ -13,7 +13,7 @@ const router: FastifyPluginCallback = (
     method: "GET",
     url: "/get/:id",
     schema: finOneUserSchema,
-    // preHandler: clerkPreHandler,
+    preHandler: clerkPreHandler,
     handler: async (req, rep) => {
       const { id } = req.params as { id: string };
       const data = await services.findOne(id);
@@ -29,7 +29,7 @@ const router: FastifyPluginCallback = (
     method: "POST",
     url: "/create",
     schema: createUserSchema,
-    // preHandler: clerkPreHandler,
+    preHandler: clerkPreHandler,
     handler: async (req, rep) => {
       const body = req.body as CreateUser;
 
