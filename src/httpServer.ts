@@ -58,10 +58,9 @@ export function createHttpServer(): FastifyInstance {
   fastify.register(import("./category/router"), {
     prefix: GLOBAL_PREFIX + "/category",
   });
-
-  // fastify.all("*", (_req, rep) => {
-  //   rep.code(404).send({ message: "Route not found", success: false });
-  // });
+  fastify.register(import("./state/router"), {
+    prefix: GLOBAL_PREFIX + "/state",
+  });
 
   return fastify;
 }
