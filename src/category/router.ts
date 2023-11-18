@@ -41,7 +41,7 @@ const router: FastifyPluginCallback = (
       const { id } = req.params as { id: number };
       const data = await services.findOne(id);
 
-      if (!data) throw new HttpNotFound("Category Not found");
+      if (!data) throw new HttpNotFound(`Category with id ${id} was not found`);
 
       return rep.code(200).send({
         success: true,
