@@ -7,7 +7,7 @@ import {
 } from "drizzle-orm/mysql-core";
 
 const users = mysqlTable("users", {
-  userId: varchar("userId", { length: 256 }).primaryKey().notNull(),
+  userId: varchar("userId", { length: 256 }).primaryKey().notNull().unique(),
   theme: mysqlEnum("theme", ["DARK", "LIGHT"]).default("DARK"),
   createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
   updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),

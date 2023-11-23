@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyPluginCallback } from "fastify";
 import * as services from "./service";
 import { clerkPreHandler } from "../utils/preHandlers";
 import { CreateUser, createUserSchema, finOneUserSchema } from "./schemas";
-import { HttpNotFound } from "../utils/error";
+import { HttpNotFound } from "../utils/error/http";
 
 const router: FastifyPluginCallback = (
   fastify: FastifyInstance,
@@ -11,7 +11,7 @@ const router: FastifyPluginCallback = (
 ) => {
   fastify.route({
     method: "GET",
-    url: "/get/:id",
+    url: "/:id",
     schema: finOneUserSchema,
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
@@ -19,24 +19,23 @@ const router: FastifyPluginCallback = (
       const data = await services.findOne(id);
 
       if (!data) throw new HttpNotFound("User Not found");
-      return rep
-        .code(200)
-        .send({ success: true, message: `User with id ${id} was found`, data });
+      return rep.code(200).send({
+        message: `User with id ${id} was found`,
+        data,
+      });
     },
   });
 
   fastify.route({
     method: "POST",
-    url: "/create",
+    url: "/",
     schema: createUserSchema,
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
       const body = req.body as CreateUser;
 
       const data = await services.createOne(body);
-      return rep
-        .code(201)
-        .send({ message: "User created successfully", data, success: true });
+      return rep.code(201).send({ message: "User created successfully", data });
     },
   });
 

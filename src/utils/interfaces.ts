@@ -3,6 +3,7 @@ export interface BaseSchema {
   properties: {
     [key: string]: {
       type: "object" | "array" | "null" | "string" | "number" | "boolean";
+      format?: string;
     };
   };
   required?: string[];

@@ -9,7 +9,7 @@ import {
   findManyStateSchema,
   updateStateSchema,
 } from "./schemas";
-import { HttpNotFound } from "../utils/error";
+import { HttpNotFound } from "../utils/error/http";
 
 const router: FastifyPluginCallback = (
   fastify: FastifyInstance,
@@ -18,23 +18,21 @@ const router: FastifyPluginCallback = (
 ) => {
   fastify.route({
     method: "GET",
-    url: "/get",
+    url: "/",
     schema: findManyStateSchema,
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
       const data = await services.findAll();
 
-      return rep.code(200).send({
-        success: true,
-        message: `Found ${data?.length} states`,
-        data,
-      });
+      return rep
+        .code(200)
+        .send({ message: `Found ${data?.length} states`, data });
     },
   });
 
   fastify.route({
     method: "GET",
-    url: "/get/:id",
+    url: "/:id",
     schema: findOneStateSchema,
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
@@ -43,17 +41,15 @@ const router: FastifyPluginCallback = (
 
       if (!data) throw new HttpNotFound(`State with id ${id} was not found`);
 
-      return rep.code(200).send({
-        success: true,
-        message: `State with id ${id} was found`,
-        data,
-      });
+      return rep
+        .code(200)
+        .send({ message: `State with id ${id} was found`, data });
     },
   });
 
   fastify.route({
     method: "POST",
-    url: "/create",
+    url: "/",
     schema: createStateSchema,
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
@@ -61,16 +57,13 @@ const router: FastifyPluginCallback = (
 
       await services.createOne(body);
 
-      return rep.code(201).send({
-        message: "State created successfully",
-        success: true,
-      });
+      return rep.code(201).send({ message: "State created successfully" });
     },
   });
 
   fastify.route({
     method: "PUT",
-    url: "/update/:id",
+    url: "/:id",
     schema: updateStateSchema,
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
@@ -79,10 +72,7 @@ const router: FastifyPluginCallback = (
 
       await services.updateOne(body, id);
 
-      return rep.code(200).send({
-        message: "State updated successfully",
-        success: true,
-      });
+      return rep.code(200).send({ message: "State updated successfully" });
     },
   });
 

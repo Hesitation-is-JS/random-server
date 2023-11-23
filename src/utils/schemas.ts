@@ -4,7 +4,6 @@ export const baseResponseSchema: ResponseSchema = {
   "4xx": {
     type: "object",
     properties: {
-      success: { type: "boolean" },
       message: { type: "string" },
       error: { type: "object" },
     },
@@ -12,7 +11,6 @@ export const baseResponseSchema: ResponseSchema = {
   "5xx": {
     type: "object",
     properties: {
-      success: { type: "boolean" },
       message: { type: "string" },
       error: { type: "object" },
     },
@@ -35,7 +33,6 @@ export const findOneResponseSchema: ResponseSchema = {
   "2xx": {
     type: "object",
     properties: {
-      success: { type: "boolean" },
       message: { type: "string" },
       data: { type: "array" },
     },
@@ -47,7 +44,6 @@ export const findManyResponseSchema: ResponseSchema = {
   "2xx": {
     type: "object",
     properties: {
-      success: { type: "boolean" },
       message: { type: "string" },
       data: { type: "array" },
     },

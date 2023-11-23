@@ -2,12 +2,12 @@ import { FastifyInstance, FastifyPluginCallback } from "fastify";
 import * as services from "./service";
 import { clerkPreHandler } from "../utils/preHandlers";
 import {
-  CreateCategory,
-  UpdateCategory,
-  createCategorySchema,
-  finOneCategorySchema,
-  finManyCategorySchema,
-  updateCategorySchema,
+  CreateTask,
+  UpdateTask,
+  createTaskSchema,
+  findManyTaskSchema,
+  findOneTaskSchema,
+  updateTaskSchema,
 } from "./schemas";
 import { HttpNotFound } from "../utils/error/http";
 
@@ -19,14 +19,13 @@ const router: FastifyPluginCallback = (
   fastify.route({
     method: "GET",
     url: "/",
-    schema: finManyCategorySchema,
+    schema: findManyTaskSchema,
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
       const data = await services.findAll();
 
       return rep.code(200).send({
-        success: true,
-        message: `Found ${data?.length} Categories`,
+        message: `Found ${data?.length} tasks`,
         data,
       });
     },
@@ -35,17 +34,16 @@ const router: FastifyPluginCallback = (
   fastify.route({
     method: "GET",
     url: "/:id",
-    schema: finOneCategorySchema,
+    schema: findOneTaskSchema,
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
       const { id } = req.params as { id: number };
       const data = await services.findOne(id);
 
-      if (!data) throw new HttpNotFound(`Category with id ${id} was not found`);
+      if (!data) throw new HttpNotFound(`Task with id ${id} was not found`);
 
       return rep.code(200).send({
-        success: true,
-        message: `Category with id ${id} was found`,
+        message: `Task with id ${id} was found`,
         data,
       });
     },
@@ -54,17 +52,15 @@ const router: FastifyPluginCallback = (
   fastify.route({
     method: "POST",
     url: "/",
-    schema: createCategorySchema,
+    schema: createTaskSchema,
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
-      const body = req.body as CreateCategory;
+      const body = req.body as CreateTask;
 
-      const data = await services.createOne(body);
+      await services.createOne(body);
 
       return rep.code(201).send({
-        message: "Category created successfully",
-        data,
-        success: true,
+        message: "Task created successfully",
       });
     },
   });
@@ -72,17 +68,16 @@ const router: FastifyPluginCallback = (
   fastify.route({
     method: "PUT",
     url: "/:id",
-    schema: updateCategorySchema,
+    schema: updateTaskSchema,
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
       const { id } = req.params as { id: number };
-      const body = req.body as UpdateCategory;
+      const body = req.body as UpdateTask;
 
       await services.updateOne(body, id);
 
       return rep.code(200).send({
-        message: "Category updated successfully",
-        success: true,
+        message: "Task updated successfully",
       });
     },
   });
