@@ -10,8 +10,4 @@ const states = mysqlTable("states", {
   updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const statesRelations = relations(states, ({ many }) => ({
-  posts: many(tasks),
-}));
-
 export default states;

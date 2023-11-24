@@ -3,7 +3,6 @@ import {
   mysqlTable,
   varchar,
   timestamp,
-  serial,
   int,
   datetime,
 } from "drizzle-orm/mysql-core";
@@ -12,7 +11,7 @@ import categories from "./category";
 import states from "./state";
 
 const tasks = mysqlTable("tasks", {
-  id: serial("id").primaryKey(),
+  id: int("id").primaryKey(),
   title: varchar("title", { length: 256 }),
   description: varchar("description", { length: 2000 }),
   dueDate: datetime("due_date"),
