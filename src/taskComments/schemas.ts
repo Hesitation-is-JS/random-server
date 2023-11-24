@@ -25,7 +25,7 @@ export const createTaskCommentSchema: ValidationSchema = {
   response: defaultSuccessSchema,
 };
 
-export const findOneTaskSchema: ValidationSchema = {
+export const findOneTaskCommentSchema: ValidationSchema = {
   description:
     "This endpoint return task comment data by their corresponding id",
   tags: ["task", "comment"],
