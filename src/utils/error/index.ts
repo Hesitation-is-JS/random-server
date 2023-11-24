@@ -8,6 +8,8 @@ export default function globalErrorHandler(
   _req: FastifyRequest,
   rep: FastifyReply
 ) {
+  this.log.error(error);
+
   let status = 500;
   let message = "Internal server  error";
 
@@ -32,7 +34,6 @@ export default function globalErrorHandler(
       break;
 
     default:
-      this.log.error(error);
       break;
   }
 
