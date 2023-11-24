@@ -1,5 +1,10 @@
 import { FastifyInstance, FastifyPluginCallback } from "fastify";
 import * as services from "./service";
+import {
+  createOne,
+  findAllTaskComment,
+  updateOne,
+} from "../taskComments/service";
 import { clerkPreHandler } from "../utils/preHandlers";
 import {
   CreateTask,
@@ -10,6 +15,13 @@ import {
   updateTaskSchema,
 } from "./schemas";
 import { HttpNotFound } from "../utils/error/http";
+import {
+  CreateTaskComment,
+  UpdateTaskComment,
+  createTaskCommentSchema,
+  findOneTaskCommentSchema,
+  updateTaskCommentSchema,
+} from "../taskComments/schemas";
 
 const router: FastifyPluginCallback = (
   fastify: FastifyInstance,
@@ -50,6 +62,22 @@ const router: FastifyPluginCallback = (
   });
 
   fastify.route({
+    method: "GET",
+    url: "/:id/comments",
+    schema: findOneTaskCommentSchema,
+    // preHandler: clerkPreHandler,
+    handler: async (req, rep) => {
+      const { id } = req.params as { id: number };
+      const data = await findAllTaskComment(id);
+
+      return rep.code(200).send({
+        message: `Found ${data?.length} comment for task ${id}`,
+        data,
+      });
+    },
+  });
+
+  fastify.route({
     method: "POST",
     url: "/",
     schema: createTaskSchema,
@@ -61,6 +89,39 @@ const router: FastifyPluginCallback = (
 
       return rep.code(201).send({
         message: "Task created successfully",
+      });
+    },
+  });
+
+  fastify.route({
+    method: "POST",
+    url: "/comments",
+    schema: createTaskCommentSchema,
+    // preHandler: clerkPreHandler,
+    handler: async (req, rep) => {
+      const body = req.body as CreateTaskComment;
+
+      await createOne(body);
+
+      return rep.code(201).send({
+        message: "Comment created successfully",
+      });
+    },
+  });
+
+  fastify.route({
+    method: "PUT",
+    url: "/comments/:id",
+    schema: updateTaskCommentSchema,
+    // preHandler: clerkPreHandler,
+    handler: async (req, rep) => {
+      const { id } = req.params as { id: number };
+      const body = req.body as UpdateTaskComment;
+
+      await updateOne(body, id);
+
+      return rep.code(201).send({
+        message: "Comment updated successfully",
       });
     },
   });
