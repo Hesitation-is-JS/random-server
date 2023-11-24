@@ -1,8 +1,10 @@
 import { FastifyInstance, FastifyPluginCallback } from "fastify";
 import * as services from "./service";
+import { findAllUserComment } from "../taskComments/service";
 import { clerkPreHandler } from "../utils/preHandlers";
 import { CreateUser, createUserSchema, finOneUserSchema } from "./schemas";
 import { HttpNotFound } from "../utils/error/http";
+import { findManyTaskCommentSchema } from "../taskComments/schemas";
 
 const router: FastifyPluginCallback = (
   fastify: FastifyInstance,
@@ -21,6 +23,22 @@ const router: FastifyPluginCallback = (
       if (!data) throw new HttpNotFound("User Not found");
       return rep.code(200).send({
         message: `User with id ${id} was found`,
+        data,
+      });
+    },
+  });
+
+  fastify.route({
+    method: "GET",
+    url: "/:id/comments",
+    schema: findManyTaskCommentSchema,
+    // preHandler: clerkPreHandler,
+    handler: async (req, rep) => {
+      const { id } = req.params as { id: string };
+      const data = await findAllUserComment(id);
+
+      return rep.code(200).send({
+        message: `Found ${data?.length} comment for user ${id}`,
         data,
       });
     },
