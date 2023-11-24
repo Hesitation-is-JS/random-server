@@ -83,9 +83,9 @@ const router: FastifyPluginCallback = (
     schema: createTaskSchema,
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
-      const body = req.body as CreateTask;
+      const { userId, ...task } = req.body as CreateTask & { userId: string };
 
-      await services.createOne(body);
+      await services.createOne(task, userId);
 
       return rep.code(201).send({
         message: "Task created successfully",
