@@ -6,8 +6,8 @@ import {
   findOneResponseSchema,
 } from "../utils/schemas";
 
-export type CreateTask = typeof comment.$inferInsert;
-export type UpdateTask = { content: string };
+export type CreateTaskComment = typeof comment.$inferInsert;
+export type UpdateTaskComment = { content: string };
 
 export const createTaskCommentSchema: ValidationSchema = {
   description: "This endpoint handles the creation of task records",
@@ -23,6 +23,21 @@ export const createTaskCommentSchema: ValidationSchema = {
     required: ["userId", "taskId", "content"],
   },
   response: defaultSuccessSchema,
+};
+
+export const findOneTaskSchema: ValidationSchema = {
+  description:
+    "This endpoint return task comment data by their corresponding id",
+  tags: ["task", "comment"],
+  summary: "Find one comment",
+  params: {
+    type: "object",
+    properties: {
+      id: { type: "number" },
+    },
+    required: ["id"],
+  },
+  response: findOneResponseSchema,
 };
 
 export const findManyTaskCommentSchema: ValidationSchema = {
