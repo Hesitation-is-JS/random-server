@@ -9,8 +9,4 @@ const categories = mysqlTable("categories", {
   updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const categoriesRelations = relations(categories, ({ many }) => ({
-  posts: many(tasks),
-}));
-
 export default categories;
