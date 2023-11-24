@@ -4,7 +4,7 @@ import users from "./user";
 import tasks from "./task";
 
 const usersTasks = mysqlTable("users_tasks", {
-  id: int("id").primaryKey(),
+  id: int("id").primaryKey().autoincrement(),
   userId: varchar("user_id", { length: 256 }).references(() => users.userId),
   taskId: int("tas_id").references(() => tasks.id),
   createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
