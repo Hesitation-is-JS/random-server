@@ -1,14 +1,20 @@
 import { eq } from "drizzle-orm";
 import { db } from "..";
 import tasks from "../db/schema/task";
+import usersTasks from "../db/schema/usersTasks";
 import { CreateTask, UpdateTask } from "./schemas";
 import { isArrayEmpty } from "../utils/utils";
 import { HttpNotFound } from "../utils/error/http";
 
-export async function createOne(task: CreateTask) {
-  return await db
-    ?.insert(tasks)
-    .values({ ...task, dueDate: new Date(task.dueDate ?? "") });
+export async function createOne(task: CreateTask, userId: string) {
+  await db?.transaction(async (tx) => {
+    const createdTask = await tx
+      .insert(tasks)
+      .values({ ...task, dueDate: new Date(task.dueDate ?? "") });
+    await tx
+      .insert(usersTasks)
+      .values({ taskId: createdTask[0].insertId, userId });
+  });
 }
 
 export async function findOne(id: number) {
