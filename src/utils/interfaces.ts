@@ -7,6 +7,7 @@ export interface BaseSchema {
     };
   };
   required?: string[];
+  additionalProperties?: boolean;
 }
 
 export interface ResponseSchema {
