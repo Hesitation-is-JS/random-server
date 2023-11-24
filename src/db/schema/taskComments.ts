@@ -3,7 +3,7 @@ import { mysqlTable, varchar, timestamp, int } from "drizzle-orm/mysql-core";
 import users from "./user";
 import tasks from "./task";
 
-const tasksComments = mysqlTable("tasksComments", {
+const tasksComments = mysqlTable("tasks-comments", {
   id: int("id").primaryKey(),
   userId: varchar("user_id", { length: 256 }).references(() => users.userId),
   taskId: int("tas_id").references(() => tasks.id),
