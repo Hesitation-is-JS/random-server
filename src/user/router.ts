@@ -4,7 +4,7 @@ import { findAllUserComment } from "../taskComments/service";
 import { clerkPreHandler } from "../utils/preHandlers";
 import { CreateUser, createUserSchema, finOneUserSchema } from "./schemas";
 import { HttpNotFound } from "../utils/error/http";
-import { findManyTaskCommentSchema } from "../taskComments/schemas";
+import { findOneUserCommentSchema } from "../taskComments/schemas";
 
 const router: FastifyPluginCallback = (
   fastify: FastifyInstance,
@@ -31,7 +31,7 @@ const router: FastifyPluginCallback = (
   fastify.route({
     method: "GET",
     url: "/:id/comments",
-    schema: findManyTaskCommentSchema,
+    schema: findOneUserCommentSchema,
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
       const { id } = req.params as { id: string };

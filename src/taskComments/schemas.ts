@@ -11,7 +11,7 @@ export type UpdateTaskComment = { content: string };
 
 export const createTaskCommentSchema: ValidationSchema = {
   description: "This endpoint handles the creation of task records",
-  tags: ["task", "comments"],
+  tags: ["task"],
   summary: "Create comment record",
   body: {
     type: "object",
@@ -28,7 +28,22 @@ export const createTaskCommentSchema: ValidationSchema = {
 export const findOneTaskCommentSchema: ValidationSchema = {
   description:
     "This endpoint return task comment data by their corresponding id",
-  tags: ["task", "comment"],
+  tags: ["task"],
+  summary: "Find one comment",
+  params: {
+    type: "object",
+    properties: {
+      id: { type: "number" },
+    },
+    required: ["id"],
+  },
+  response: findOneResponseSchema,
+};
+
+export const findOneUserCommentSchema: ValidationSchema = {
+  description:
+    "This endpoint return task comment data by their corresponding id",
+  tags: ["user"],
   summary: "Find one comment",
   params: {
     type: "object",
@@ -42,14 +57,14 @@ export const findOneTaskCommentSchema: ValidationSchema = {
 
 export const findManyTaskCommentSchema: ValidationSchema = {
   description: "This endpoint return all task comments",
-  tags: ["task", "comments"],
+  tags: ["task", "user"],
   summary: "Find all task comments",
   response: findManyResponseSchema,
 };
 
 export const updateTaskCommentSchema: ValidationSchema = {
   description: "This endpoint handles the update of task records",
-  tags: ["task", "comments"],
+  tags: ["task"],
   summary: "Update comment record",
   body: {
     type: "object",
