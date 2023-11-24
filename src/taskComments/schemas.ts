@@ -21,6 +21,7 @@ export const createTaskCommentSchema: ValidationSchema = {
       content: { type: "string" },
     },
     required: ["userId", "taskId", "content"],
+    additionalProperties: false,
   },
   response: defaultSuccessSchema,
 };
@@ -36,6 +37,7 @@ export const findOneTaskCommentSchema: ValidationSchema = {
       id: { type: "number" },
     },
     required: ["id"],
+    additionalProperties: false,
   },
   response: findOneResponseSchema,
 };
@@ -51,6 +53,7 @@ export const findOneUserCommentSchema: ValidationSchema = {
       id: { type: "number" },
     },
     required: ["id"],
+    additionalProperties: false,
   },
   response: findOneResponseSchema,
 };
@@ -72,6 +75,7 @@ export const updateTaskCommentSchema: ValidationSchema = {
       content: { type: "string" },
     },
     required: ["content"],
+    additionalProperties: false,
   },
   response: defaultSuccessSchema,
 };
