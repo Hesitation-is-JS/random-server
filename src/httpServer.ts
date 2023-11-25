@@ -64,6 +64,9 @@ export function createHttpServer(): FastifyInstance {
   fastify.register(import("./task/router"), {
     prefix: GLOBAL_PREFIX + "/task",
   });
+  fastify.register(import("./taskCollection/router"), {
+    prefix: GLOBAL_PREFIX + "/collection",
+  });
 
   return fastify;
 }

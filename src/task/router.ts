@@ -1,10 +1,6 @@
 import { FastifyInstance, FastifyPluginCallback } from "fastify";
 import * as services from "./service";
-import {
-  createOne,
-  findAllTaskComment,
-  updateOne,
-} from "../taskComments/service";
+import * as comments from "../taskComments/service";
 import { clerkPreHandler } from "../utils/preHandlers";
 import {
   CreateTask,
@@ -63,12 +59,12 @@ const router: FastifyPluginCallback = (
 
   fastify.route({
     method: "GET",
-    url: "/:id/comments",
+    url: "/:id/comment",
     schema: findOneTaskCommentSchema,
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
       const { id } = req.params as { id: number };
-      const data = await findAllTaskComment(id);
+      const data = await comments.findAllTaskComment(id);
 
       return rep.code(200).send({
         message: `Found ${data?.length} comment for task ${id}`,
@@ -95,13 +91,13 @@ const router: FastifyPluginCallback = (
 
   fastify.route({
     method: "POST",
-    url: "/comments",
+    url: "/comment",
     schema: createTaskCommentSchema,
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
       const body = req.body as CreateTaskComment;
 
-      await createOne(body);
+      await comments.createOne(body);
 
       return rep.code(201).send({
         message: "Comment created successfully",
@@ -111,14 +107,14 @@ const router: FastifyPluginCallback = (
 
   fastify.route({
     method: "PUT",
-    url: "/comments/:id",
+    url: "/comment/:id",
     schema: updateTaskCommentSchema,
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
       const { id } = req.params as { id: number };
       const body = req.body as UpdateTaskComment;
 
-      await updateOne(body, id);
+      await comments.updateOne(body, id);
 
       return rep.code(201).send({
         message: "Comment updated successfully",
