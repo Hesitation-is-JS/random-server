@@ -1,10 +1,12 @@
 import { FastifyInstance, FastifyPluginCallback } from "fastify";
 import * as services from "./service";
 import { findAllUserComment } from "../taskComments/service";
+import * as collection from "../taskCollection/service";
 import { clerkPreHandler } from "../utils/preHandlers";
 import { CreateUser, createUserSchema, finOneUserSchema } from "./schemas";
 import { HttpNotFound } from "../utils/error/http";
 import { findOneUserCommentSchema } from "../taskComments/schemas";
+import { findOneUserCollectionSchema } from "../taskCollection/schemas";
 
 const router: FastifyPluginCallback = (
   fastify: FastifyInstance,
@@ -23,6 +25,22 @@ const router: FastifyPluginCallback = (
       if (!data) throw new HttpNotFound("User Not found");
       return rep.code(200).send({
         message: `User with id ${id} was found`,
+        data,
+      });
+    },
+  });
+
+  fastify.route({
+    method: "GET",
+    url: "/:id/collection",
+    schema: findOneUserCollectionSchema,
+    // preHandler: clerkPreHandler,
+    handler: async (req, rep) => {
+      const { id } = req.params as { id: string };
+      const data = await collection.findAllUserCollection(id);
+
+      return rep.code(200).send({
+        message: `Found ${data?.length} task collections`,
         data,
       });
     },
