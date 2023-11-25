@@ -27,10 +27,9 @@ export const createTaskCommentSchema: ValidationSchema = {
 };
 
 export const findOneTaskCommentSchema: ValidationSchema = {
-  description:
-    "This endpoint return task comment data by their corresponding id",
+  description: "This endpoint return task's comment",
   tags: ["task"],
-  summary: "Find one comment",
+  summary: "Find task's comments",
   params: {
     type: "object",
     properties: {
