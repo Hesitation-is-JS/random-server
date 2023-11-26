@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "..";
-import users from "../db/schema/user";
+import { users } from "../db/schema";
 import { CreateUser, UpdateUser } from "./schemas";
 import { isArrayEmpty } from "../utils/utils";
 import { clerkClient } from "@clerk/fastify";

@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "..";
-import states from "../db/schema/state";
+import { states } from "../db/schema";
 import { CreateState, UpdateState } from "./schemas";
 import { isArrayEmpty } from "../utils/utils";
 import { HttpNotFound } from "../utils/error/http";

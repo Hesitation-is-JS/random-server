@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { db } from "..";
-import tasks from "../db/schema/task";
-import usersTasks from "../db/schema/usersTasks";
+import { tasks } from "../db/schema";
+import { usersTasks } from "../db/schema";
 import { CreateTask, UpdateTask } from "./schemas";
 import { isArrayEmpty } from "../utils/utils";
 import { HttpNotFound } from "../utils/error/http";
