@@ -1,4 +1,4 @@
-import taskCollection from "../db/schema/taskCollection";
+import { taskCollections } from "../db/schema";
 import { ValidationSchema } from "../utils/interfaces";
 import {
   defaultSuccessSchema,
@@ -6,7 +6,7 @@ import {
   findOneResponseSchema,
 } from "../utils/schemas";
 
-export type CreateTaskCollection = typeof taskCollection.$inferInsert;
+export type CreateTaskCollection = typeof taskCollections.$inferInsert;
 export type UpdateTaskCollection = { title: string; description: string };
 
 export const createTaskCollectionSchema: ValidationSchema = {
@@ -39,7 +39,7 @@ export const findOneTaskCollectionSchema: ValidationSchema = {
     required: ["id"],
     additionalProperties: false,
   },
-  response: findOneResponseSchema,
+  // response: findOneResponseSchema,
 };
 
 export const findOneUserCollectionSchema: ValidationSchema = {
@@ -54,7 +54,7 @@ export const findOneUserCollectionSchema: ValidationSchema = {
     required: ["id"],
     additionalProperties: false,
   },
-  response: findOneResponseSchema,
+  // response: findOneResponseSchema,
 };
 
 export const findManyTaskCollectionSchema: ValidationSchema = {

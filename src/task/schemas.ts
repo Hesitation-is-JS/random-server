@@ -1,4 +1,4 @@
-import tasks from "../db/schema/task";
+import { tasks } from "../db/schema";
 import { ValidationSchema } from "../utils/interfaces";
 import {
   defaultSuccessSchema,
@@ -53,7 +53,7 @@ export const findOneTaskSchema: ValidationSchema = {
     },
     required: ["id"],
   },
-  response: findOneResponseSchema,
+  // response: findOneResponseSchema,
 };
 
 export const findManyTaskSchema: ValidationSchema = {

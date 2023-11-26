@@ -1,4 +1,4 @@
-import users from "../db/schema/user";
+import { users } from "../db/schema";
 import { ValidationSchema } from "../utils/interfaces";
 import { defaultSuccessSchema, findOneResponseSchema } from "../utils/schemas";
 
@@ -31,5 +31,5 @@ export const finOneUserSchema: ValidationSchema = {
     },
     required: ["id"],
   },
-  response: findOneResponseSchema,
+  // response: findOneResponseSchema,
 };
