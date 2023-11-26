@@ -1,4 +1,4 @@
-import states from "../db/schema/state";
+import { states } from "../db/schema";
 import { ValidationSchema } from "../utils/interfaces";
 import {
   defaultSuccessSchema,
@@ -35,7 +35,7 @@ export const findOneStateSchema: ValidationSchema = {
     },
     required: ["id"],
   },
-  response: findOneResponseSchema,
+  // response: findOneResponseSchema,
 };
 
 export const findManyStateSchema: ValidationSchema = {

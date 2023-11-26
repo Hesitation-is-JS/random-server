@@ -1,4 +1,4 @@
-import comment from "../db/schema/taskComments";
+import { tasksComments } from "../db/schema";
 import { ValidationSchema } from "../utils/interfaces";
 import {
   defaultSuccessSchema,
@@ -6,7 +6,7 @@ import {
   findOneResponseSchema,
 } from "../utils/schemas";
 
-export type CreateTaskComment = typeof comment.$inferInsert;
+export type CreateTaskComment = typeof tasksComments.$inferInsert;
 export type UpdateTaskComment = { content: string };
 
 export const createTaskCommentSchema: ValidationSchema = {
@@ -38,7 +38,7 @@ export const findOneTaskCommentSchema: ValidationSchema = {
     required: ["id"],
     additionalProperties: false,
   },
-  response: findOneResponseSchema,
+  // response: findOneResponseSchema,
 };
 
 export const findOneUserCommentSchema: ValidationSchema = {
@@ -54,7 +54,7 @@ export const findOneUserCommentSchema: ValidationSchema = {
     required: ["id"],
     additionalProperties: false,
   },
-  response: findOneResponseSchema,
+  // response: findOneResponseSchema,
 };
 
 export const findManyTaskCommentSchema: ValidationSchema = {

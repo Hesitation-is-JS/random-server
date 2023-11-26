@@ -1,4 +1,4 @@
-import categories from "../db/schema/category";
+import { categories } from "../db/schema";
 import { ValidationSchema } from "../utils/interfaces";
 import {
   defaultSuccessSchema,
@@ -34,7 +34,7 @@ export const finOneCategorySchema: ValidationSchema = {
     },
     required: ["id"],
   },
-  response: findOneResponseSchema,
+  // response: findOneResponseSchema,
 };
 
 export const finManyCategorySchema: ValidationSchema = {
