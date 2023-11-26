@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "..";
-import categories from "../db/schema/category";
+import { categories } from "../db/schema";
 import { CreateCategory, UpdateCategory } from "./schemas";
 import { isArrayEmpty } from "../utils/utils";
 import { HttpNotFound } from "../utils/error/http";

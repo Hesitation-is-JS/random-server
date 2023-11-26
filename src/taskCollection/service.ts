@@ -1,11 +1,10 @@
 import { eq } from "drizzle-orm";
 import { db } from "..";
-import taskCollections from "../db/schema/taskCollection";
+import { taskCollections } from "../db/schema";
+import { tasks } from "../db/schema";
 import { CreateTaskCollection, UpdateTaskCollection } from "./schemas";
 import { isArrayEmpty } from "../utils/utils";
 import { HttpNotFound } from "../utils/error/http";
-import tasks from "../db/schema/task";
-import { drizzle } from "drizzle-orm/mysql2";
 
 export async function createOne(taskCollection: CreateTaskCollection) {
   return await db?.insert(taskCollections).values(taskCollection);
