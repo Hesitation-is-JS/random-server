@@ -29,11 +29,15 @@ export const states = mysqlTable("states", {
   id: int("id").primaryKey().autoincrement(),
   title: varchar("title", { length: 15 }).notNull().unique(),
   color: varchar("color", { length: 15 }).notNull(),
+  userId: varchar("user_id", { length: 256 })
+    .references(() => users.userId, { onDelete: "cascade" })
+    .notNull(),
   createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
   updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const statesRelations = relations(states, ({ many }) => ({
+export const statesRelations = relations(states, ({ many, one }) => ({
+  user: one(users),
   tasks: many(tasks),
 }));
 
@@ -99,6 +103,7 @@ export const usersRelations = relations(tasks, ({ many, one }) => ({
   users: one(users),
   tasks: many(tasks),
   categories: many(categories),
+  states: many(states),
 }));
 
 export const usersTasks = mysqlTable("users_tasks", {

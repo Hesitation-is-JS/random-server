@@ -18,8 +18,9 @@ export const createStateSchema: ValidationSchema = {
     properties: {
       title: { type: "string" },
       color: { type: "string" },
+      userId: { type: "string" },
     },
-    required: ["title", "color"],
+    required: ["title", "color", "userId"],
   },
   response: defaultSuccessSchema,
 };
@@ -45,6 +46,20 @@ export const findManyStateSchema: ValidationSchema = {
   response: findManyResponseSchema,
 };
 
+export const finUsersStateSchema: ValidationSchema = {
+  description: "This endpoint return all user's states",
+  tags: ["user"],
+  summary: "Find all user's states",
+  params: {
+    type: "object",
+    properties: {
+      id: { type: "string" },
+    },
+    required: ["id"],
+  },
+  response: findManyResponseSchema,
+};
+
 export const updateStateSchema: ValidationSchema = {
   description: "This endpoint handles the update of state records",
   tags: ["state"],
@@ -55,6 +70,20 @@ export const updateStateSchema: ValidationSchema = {
       title: { type: "string" },
     },
     required: ["title"],
+  },
+  response: defaultSuccessSchema,
+};
+
+export const deleteOneStateSchema: ValidationSchema = {
+  description: "This endpoint deletes state data by their corresponding id",
+  tags: ["state"],
+  summary: "Delete one state",
+  params: {
+    type: "object",
+    properties: {
+      id: { type: "number" },
+    },
+    required: ["id"],
   },
   response: defaultSuccessSchema,
 };
