@@ -49,7 +49,7 @@ export const findOneUserCommentSchema: ValidationSchema = {
   params: {
     type: "object",
     properties: {
-      id: { type: "number" },
+      id: { type: "string" },
     },
     required: ["id"],
     additionalProperties: false,
