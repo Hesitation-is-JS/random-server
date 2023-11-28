@@ -8,6 +8,7 @@ import {
   findOneStateSchema,
   findManyStateSchema,
   updateStateSchema,
+  deleteOneStateSchema,
 } from "./schemas";
 import { HttpNotFound } from "../utils/error/http";
 
@@ -73,6 +74,20 @@ const router: FastifyPluginCallback = (
       await services.updateOne(body, id);
 
       return rep.code(200).send({ message: "State updated successfully" });
+    },
+  });
+
+  fastify.route({
+    method: "DELETE",
+    url: "/:id",
+    schema: deleteOneStateSchema,
+    // preHandler: clerkPreHandler,
+    handler: async (req, rep) => {
+      const { id } = req.params as { id: number };
+
+      await services.deleteOne(id);
+
+      return rep.code(200).send({ message: "State deleted successfully" });
     },
   });
 
