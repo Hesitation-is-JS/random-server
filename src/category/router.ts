@@ -8,6 +8,7 @@ import {
   finOneCategorySchema,
   finManyCategorySchema,
   updateCategorySchema,
+  deleteOneCategorySchema,
 } from "./schemas";
 import { HttpNotFound } from "../utils/error/http";
 
@@ -82,6 +83,23 @@ const router: FastifyPluginCallback = (
 
       return rep.code(200).send({
         message: "Category updated successfully",
+        success: true,
+      });
+    },
+  });
+
+  fastify.route({
+    method: "DELETE",
+    url: "/:id",
+    schema: deleteOneCategorySchema,
+    // preHandler: clerkPreHandler,
+    handler: async (req, rep) => {
+      const { id } = req.params as { id: number };
+
+      await services.deleteOne(id);
+
+      return rep.code(200).send({
+        message: "Category deleted successfully",
         success: true,
       });
     },
