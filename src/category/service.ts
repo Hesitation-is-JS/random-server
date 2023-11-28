@@ -23,6 +23,10 @@ export async function findAll() {
   return await db?.select().from(categories);
 }
 
+export async function findAllForUser(id: string) {
+  return await db?.select().from(categories).where(eq(categories.userId, id));
+}
+
 export async function updateOne(category: UpdateCategory, id: number) {
   if (!(await findOne(id)))
     throw new HttpNotFound(`Category with id ${id} was not found`);
@@ -31,4 +35,11 @@ export async function updateOne(category: UpdateCategory, id: number) {
     ?.update(categories)
     .set(category)
     .where(eq(categories.id, id));
+}
+
+export async function deleteOne(id: number) {
+  if (!(await findOne(id)))
+    throw new HttpNotFound(`Category with id ${id} was not found`);
+
+  return await db?.delete(categories).where(eq(categories.id, id));
 }

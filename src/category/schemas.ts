@@ -17,8 +17,9 @@ export const createCategorySchema: ValidationSchema = {
     type: "object",
     properties: {
       title: { type: "string" },
+      userId: { type: "string" },
     },
-    required: ["title"],
+    required: ["title", "userId"],
   },
   response: defaultSuccessSchema,
 };
@@ -44,6 +45,20 @@ export const finManyCategorySchema: ValidationSchema = {
   response: findManyResponseSchema,
 };
 
+export const finUsersCategorySchema: ValidationSchema = {
+  description: "This endpoint return all user's categories",
+  tags: ["user"],
+  summary: "Find all user's category",
+  params: {
+    type: "object",
+    properties: {
+      id: { type: "string" },
+    },
+    required: ["id"],
+  },
+  response: findManyResponseSchema,
+};
+
 export const updateCategorySchema: ValidationSchema = {
   description: "This endpoint handles the update of category records",
   tags: ["category"],
@@ -56,4 +71,18 @@ export const updateCategorySchema: ValidationSchema = {
     required: ["title"],
   },
   response: defaultSuccessSchema,
+};
+
+export const deleteOneCategorySchema: ValidationSchema = {
+  description: "This endpoint deletes category data by their corresponding id",
+  tags: ["category"],
+  summary: "Delete one category",
+  params: {
+    type: "object",
+    properties: {
+      id: { type: "number" },
+    },
+    required: ["id"],
+  },
+  // response: findOneResponseSchema,
 };

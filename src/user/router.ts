@@ -1,10 +1,12 @@
 import { FastifyInstance, FastifyPluginCallback } from "fastify";
 import * as services from "./service";
-import { findAllUserComment } from "../taskComments/service";
+import * as commentService from "../taskComments/service";
+import * as categoryService from "../category/service";
 import { clerkPreHandler } from "../utils/preHandlers";
 import { CreateUser, createUserSchema, finOneUserSchema } from "./schemas";
 import { HttpNotFound } from "../utils/error/http";
 import { findOneUserCommentSchema } from "../taskComments/schemas";
+import { finUsersCategorySchema } from "../category/schemas";
 
 const router: FastifyPluginCallback = (
   fastify: FastifyInstance,
@@ -35,10 +37,26 @@ const router: FastifyPluginCallback = (
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
       const { id } = req.params as { id: string };
-      const data = await findAllUserComment(id);
+      const data = await commentService.findAllUserComment(id);
 
       return rep.code(200).send({
         message: `Found ${data?.length} comment for user ${id}`,
+        data,
+      });
+    },
+  });
+
+  fastify.route({
+    method: "GET",
+    url: "/:id/categories",
+    schema: finUsersCategorySchema,
+    // preHandler: clerkPreHandler,
+    handler: async (req, rep) => {
+      const { id } = req.params as { id: string };
+      const data = await categoryService.findAllForUser(id);
+
+      return rep.code(200).send({
+        message: `Found ${data?.length} categories for user ${id}`,
         data,
       });
     },
