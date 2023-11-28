@@ -2,6 +2,7 @@ import { FastifyInstance, FastifyPluginCallback } from "fastify";
 import * as services from "./service";
 import * as commentService from "../taskComments/service";
 import * as categoryService from "../category/service";
+import * as stateService from "../state/service";
 import { clerkPreHandler } from "../utils/preHandlers";
 import { CreateUser, createUserSchema, finOneUserSchema } from "./schemas";
 import { HttpNotFound } from "../utils/error/http";
@@ -57,6 +58,24 @@ const router: FastifyPluginCallback = (
 
       return rep.code(200).send({
         message: `Found ${data?.length} categories for user ${id}`,
+        data,
+      });
+    },
+  });
+
+  fastify.route({
+    method: "GET",
+    url: "/:id/states",
+    schema: finUsersCategorySchema,
+    // preHandler: clerkPreHandler,
+    handler: async (req, rep) => {
+      const { id } = req.params as { id: string };
+      console.log(id);
+
+      const data = await stateService.findAllForUser(id);
+
+      return rep.code(200).send({
+        message: `Found ${data?.length} states for user ${id}`,
         data,
       });
     },
