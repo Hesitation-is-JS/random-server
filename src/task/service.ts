@@ -1,10 +1,12 @@
-import { eq } from "drizzle-orm";
 import { db } from "..";
-import { tasks } from "../db/schema";
-import { usersTasks } from "../db/schema";
+import { eq, isNull } from "drizzle-orm";
+import { alias } from "drizzle-orm/mysql-core";
+import { tasks, usersTasks } from "../db/schema";
 import { CreateTask, UpdateTask } from "./schemas";
-import { isArrayEmpty } from "../utils/utils";
+import { isObjEmpty } from "../utils/utils";
 import { HttpNotFound } from "../utils/error/http";
+
+type Task = typeof tasks.$inferSelect;
 
 export async function createOne(task: CreateTask, userId: string) {
   await db?.transaction(async (tx) => {
@@ -18,14 +20,62 @@ export async function createOne(task: CreateTask, userId: string) {
 }
 
 export async function findOne(id: number) {
-  const task = await db?.select().from(tasks).where(eq(tasks.id, id));
+  const subtask = alias(tasks, "subtask");
 
-  if (isArrayEmpty(task)) return null;
-  return await db?.select().from(tasks).where(eq(tasks.id, id));
+  const result = await db
+    ?.select()
+    .from(tasks)
+    .leftJoin(subtask, eq(tasks.id, subtask.parentId))
+    .where(eq(tasks.id, id));
+
+  const formatted = result?.reduce<
+    Record<number, { task: Task; subtasks: Task[] }>
+  >((acc, row) => {
+    const task = row.tasks;
+    const subtask = row.subtask;
+
+    if (!acc[task.id]) {
+      acc[task.id] = { task, subtasks: [] };
+    }
+
+    if (subtask) {
+      acc[task.id].subtasks.push(subtask);
+    }
+
+    return acc;
+  }, {});
+
+  if (isObjEmpty(formatted)) return null;
+
+  return Object.values(formatted ?? {})[0];
 }
 
 export async function findAll() {
-  return await db?.select().from(tasks);
+  const subtask = alias(tasks, "subtask");
+  const result = await db
+    ?.select()
+    .from(tasks)
+    .leftJoin(subtask, eq(tasks.id, subtask.parentId))
+    .where(isNull(tasks.parentId));
+
+  const formatted = result?.reduce<
+    Record<number, { task: Task; subtasks: Task[] }>
+  >((acc, row) => {
+    const task = row.tasks;
+    const subtask = row.subtask;
+
+    if (!acc[task.id]) {
+      acc[task.id] = { task, subtasks: [] };
+    }
+
+    if (subtask) {
+      acc[task.id].subtasks.push(subtask);
+    }
+
+    return acc;
+  }, {});
+
+  return Object.values(formatted ?? {});
 }
 
 export async function updateOne(task: UpdateTask, id: number) {
