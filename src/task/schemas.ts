@@ -1,4 +1,4 @@
-import { tasks } from "../db/schema";
+import { tasks, usersTasks } from "../db/schema";
 import { ValidationSchema } from "../utils/interfaces";
 import {
   defaultSuccessSchema,
@@ -6,6 +6,8 @@ import {
   findOneResponseSchema,
 } from "../utils/schemas";
 
+export type UsersTask = typeof usersTasks.$inferSelect;
+export type Task = typeof tasks.$inferSelect;
 export type CreateTask = typeof tasks.$inferInsert;
 export type UpdateTask = {
   title: string;
@@ -38,6 +40,7 @@ export const createTaskSchema: ValidationSchema = {
       "stateId",
       "categoryId",
     ],
+    additionalProperties: false,
   },
   response: defaultSuccessSchema,
 };
@@ -52,6 +55,7 @@ export const findOneTaskSchema: ValidationSchema = {
       id: { type: "number" },
     },
     required: ["id"],
+    additionalProperties: false,
   },
   // response: findOneResponseSchema,
 };
@@ -60,6 +64,21 @@ export const findManyTaskSchema: ValidationSchema = {
   description: "This endpoint return all tasks",
   tags: ["task"],
   summary: "Find all task",
+  response: findManyResponseSchema,
+};
+
+export const findUsersTaskSchema: ValidationSchema = {
+  description: "This endpoint return all user's tasks",
+  tags: ["user"],
+  summary: "Find all user's task",
+  params: {
+    type: "object",
+    properties: {
+      id: { type: "string" },
+    },
+    required: ["id"],
+    additionalProperties: false,
+  },
   response: findManyResponseSchema,
 };
 
@@ -73,11 +92,10 @@ export const updateTaskSchema: ValidationSchema = {
       title: { type: "string" },
       description: { type: "string" },
       dueDate: { type: "string", format: "date-time" },
-      userId: { type: "string" },
       stateId: { type: "number" },
       categoryId: { type: "number" },
     },
-    required: ["title"],
+    additionalProperties: false,
   },
   response: defaultSuccessSchema,
 };
