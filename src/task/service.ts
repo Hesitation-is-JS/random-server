@@ -1,12 +1,10 @@
 import { db } from "..";
-import { eq, isNull } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { alias } from "drizzle-orm/mysql-core";
 import { tasks, usersTasks } from "../db/schema";
-import { CreateTask, UpdateTask } from "./schemas";
+import { CreateTask, Task, UpdateTask, UsersTask } from "./schemas";
 import { isObjEmpty } from "../utils/utils";
 import { HttpNotFound } from "../utils/error/http";
-
-type Task = typeof tasks.$inferSelect;
 
 export async function createOne(task: CreateTask, userId: string) {
   await db?.transaction(async (tx) => {
@@ -78,9 +76,58 @@ export async function findAll() {
   return Object.values(formatted ?? {});
 }
 
+export async function findAllForUser(id: string) {
+  const subtask = alias(tasks, "subtask");
+  const result = await db
+    ?.select()
+    .from(usersTasks)
+    .leftJoin(tasks, eq(usersTasks.taskId, tasks.id))
+    .leftJoin(subtask, eq(tasks.id, subtask.parentId))
+    .where(and(isNull(tasks.parentId), eq(usersTasks.userId, id)));
+
+  const formatted = result?.reduce<
+    Record<
+      number,
+      {
+        userTask: UsersTask;
+        tasks: Record<number, Task & { subtasks: Task[] }>;
+      }
+    >
+  >((acc, row) => {
+    const userTask = row.users_tasks;
+    const task = row.tasks;
+    const subtask = row.subtask;
+
+    if (!acc[userTask.id]) {
+      acc[userTask.id] = { userTask, tasks: {} };
+    }
+
+    if (task) {
+      if (!acc[userTask.id].tasks[task.id]) {
+        acc[userTask.id].tasks[task.id] = { ...task, subtasks: [] };
+      }
+
+      if (subtask) {
+        acc[userTask.id].tasks[task.id].subtasks.push(subtask);
+      }
+    }
+
+    return acc;
+  }, {});
+
+  const flattened = Object.values(formatted ?? {}).map((record) => ({
+    userTask: record.userTask,
+    tasks: Object.values(record.tasks ?? {}),
+  }));
+
+  return flattened;
+}
+
 export async function updateOne(task: UpdateTask, id: number) {
   if (!(await findOne(id)))
     throw new HttpNotFound(`task with id ${id} was not found`);
+
+  console.log(task);
 
   return await db
     ?.update(tasks)
