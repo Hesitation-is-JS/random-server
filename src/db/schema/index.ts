@@ -46,7 +46,7 @@ export const tasks = mysqlTable(
   {
     id: int("id").primaryKey().autoincrement(),
     parentId: int("parent_id"),
-    title: varchar("title", { length: 256 }),
+    title: varchar("title", { length: 256 }).notNull(),
     description: varchar("description", { length: 2000 }),
     dueDate: datetime("due_date"),
     stateId: int("state_id").references(() => states.id),
@@ -106,13 +106,20 @@ export const usersRelations = relations(tasks, ({ many, one }) => ({
   states: many(states),
 }));
 
-export const usersTasks = mysqlTable("users_tasks", {
-  id: int("id").primaryKey().autoincrement(),
-  userId: varchar("user_id", { length: 256 }).references(() => users.userId),
-  taskId: int("tas_id").references(() => tasks.id),
-  createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
-});
+export const usersTasks = mysqlTable(
+  "users_tasks",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    userId: varchar("user_id", { length: 256 }).references(() => users.userId),
+    taskId: int("tas_id").references(() => tasks.id),
+    createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+  },
+  (table) => ({
+    userIdx: index("user_idx").on(table.userId),
+    taskIdx: index("task_idx").on(table.taskId),
+  })
+);
 
 export const usersTasksRelations = relations(tasks, ({ one }) => ({
   users: one(users),
