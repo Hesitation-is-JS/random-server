@@ -6,6 +6,7 @@ import {
   findManyResponseSchema,
 } from "../utils/schemas";
 
+export type State = typeof states.$inferSelect;
 export type CreateState = typeof states.$inferInsert;
 export type UpdateState = { title?: string; color?: string };
 

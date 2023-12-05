@@ -29,6 +29,7 @@ export const createTaskSchema: ValidationSchema = {
       description: { type: "string" },
       dueDate: { type: "string", format: "date-time" },
       userId: { type: "string" },
+      parentId: { type: "number" },
       stateId: { type: "number" },
       categoryId: { type: "number" },
     },

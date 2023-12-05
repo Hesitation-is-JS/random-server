@@ -6,6 +6,7 @@ import {
   findOneResponseSchema,
 } from "../utils/schemas";
 
+export type TaskComment = typeof tasksComments.$inferSelect;
 export type CreateTaskComment = typeof tasksComments.$inferInsert;
 export type UpdateTaskComment = { content: string };
 

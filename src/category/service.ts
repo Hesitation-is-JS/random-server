@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, isNull, or } from "drizzle-orm";
 import { db } from "..";
 import { categories } from "../db/schema";
 import { CreateCategory, UpdateCategory } from "./schemas";
@@ -24,7 +24,10 @@ export async function findAll() {
 }
 
 export async function findAllForUser(id: string) {
-  return await db?.select().from(categories).where(eq(categories.userId, id));
+  return await db
+    ?.select()
+    .from(categories)
+    .where(or(eq(categories.userId, id), isNull(categories.userId)));
 }
 
 export async function updateOne(category: UpdateCategory, id: number) {

@@ -12,32 +12,38 @@ import {
 
 export const categories = mysqlTable("categories", {
   id: int("id").primaryKey().autoincrement(),
-  title: varchar("title", { length: 15 }).notNull().unique(),
-  userId: varchar("user_id", { length: 256 })
-    .references(() => users.userId, { onDelete: "cascade" })
-    .notNull(),
+  title: varchar("title", { length: 256 }).notNull(),
+  userId: varchar("user_id", { length: 256 }).references(() => users.userId, {
+    onDelete: "cascade",
+  }),
   createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
   updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const categoriesRelations = relations(categories, ({ many, one }) => ({
-  user: one(users),
+  user: one(users, {
+    fields: [categories.userId],
+    references: [users.userId],
+  }),
   tasks: many(tasks),
 }));
 
 export const states = mysqlTable("states", {
   id: int("id").primaryKey().autoincrement(),
-  title: varchar("title", { length: 15 }).notNull().unique(),
-  color: varchar("color", { length: 15 }).notNull(),
-  userId: varchar("user_id", { length: 256 })
-    .references(() => users.userId, { onDelete: "cascade" })
-    .notNull(),
+  title: varchar("title", { length: 256 }).notNull(),
+  color: varchar("color", { length: 20 }).notNull(),
+  userId: varchar("user_id", { length: 256 }).references(() => users.userId, {
+    onDelete: "cascade",
+  }),
   createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
   updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const statesRelations = relations(states, ({ many, one }) => ({
-  user: one(users),
+  user: one(users, {
+    fields: [states.userId],
+    references: [users.userId],
+  }),
   tasks: many(tasks),
 }));
 
@@ -66,30 +72,49 @@ export const tasks = mysqlTable(
 );
 
 export const tasksRelations = relations(tasks, ({ many, one }) => ({
-  users: many(users),
-  tasks: many(tasks, { relationName: "subtaskToTask" }),
+  userTasks: many(usersTasks),
+  subtasks: many(tasks, { relationName: "subtasks" }),
   parent: one(tasks, {
     fields: [tasks.parentId],
     references: [tasks.id],
-    relationName: "taskToSubtask",
+    relationName: "subtasks",
   }),
-  category: one(categories),
-  state: one(states),
+  category: one(categories, {
+    fields: [tasks.categoryId],
+    references: [categories.id],
+  }),
+  state: one(states, {
+    fields: [tasks.stateId],
+    references: [states.id],
+  }),
   comments: many(tasksComments),
 }));
 
-export const tasksComments = mysqlTable("tasks_comments", {
-  id: int("id").primaryKey().autoincrement(),
-  userId: varchar("user_id", { length: 256 }).references(() => users.userId),
-  taskId: int("task_id").references(() => tasks.id),
-  content: varchar("content", { length: 256 }).notNull(),
-  createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
-});
+export const tasksComments = mysqlTable(
+  "tasks_comments",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    userId: varchar("user_id", { length: 256 }).references(() => users.userId),
+    taskId: int("task_id").references(() => tasks.id),
+    content: varchar("content", { length: 256 }).notNull(),
+    createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+  },
+  (table) => ({
+    userIdx: index("user_idx").on(table.userId),
+    taskIdx: index("task_idx").on(table.taskId),
+  })
+);
 
-export const taskCommentsRelations = relations(tasks, ({ one }) => ({
-  users: one(users),
-  tasks: one(tasks),
+export const taskCommentsRelations = relations(tasksComments, ({ one }) => ({
+  users: one(users, {
+    fields: [tasksComments.userId],
+    references: [users.userId],
+  }),
+  tasks: one(tasks, {
+    fields: [tasksComments.taskId],
+    references: [tasks.id],
+  }),
 }));
 
 export const users = mysqlTable("users", {
@@ -99,9 +124,8 @@ export const users = mysqlTable("users", {
   updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const usersRelations = relations(tasks, ({ many, one }) => ({
-  users: one(users),
-  tasks: many(tasks),
+export const usersRelations = relations(users, ({ many }) => ({
+  userTasks: many(usersTasks),
   categories: many(categories),
   states: many(states),
 }));
@@ -121,7 +145,13 @@ export const usersTasks = mysqlTable(
   })
 );
 
-export const usersTasksRelations = relations(tasks, ({ one }) => ({
-  users: one(users),
-  tasks: one(tasks),
+export const usersTasksRelations = relations(usersTasks, ({ one }) => ({
+  users: one(users, {
+    fields: [usersTasks.userId],
+    references: [users.userId],
+  }),
+  tasks: one(tasks, {
+    fields: [usersTasks.taskId],
+    references: [tasks.id],
+  }),
 }));

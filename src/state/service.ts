@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, isNull, or } from "drizzle-orm";
 import { db } from "..";
 import { states } from "../db/schema";
 import { CreateState, UpdateState } from "./schemas";
@@ -21,9 +21,10 @@ export async function findAll() {
 }
 
 export async function findAllForUser(id: string) {
-  console.log("id");
-
-  return await db?.select().from(states).where(eq(states.userId, id));
+  return await db
+    ?.select()
+    .from(states)
+    .where(or(eq(states.userId, id), isNull(states.userId)));
 }
 
 export async function updateOne(state: UpdateState, id: number) {
