@@ -6,6 +6,7 @@ import {
   findManyResponseSchema,
 } from "../utils/schemas";
 
+export type Category = typeof categories.$inferSelect;
 export type CreateCategory = typeof categories.$inferInsert;
 export type UpdateCategory = { title?: string };
 
