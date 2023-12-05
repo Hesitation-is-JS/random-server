@@ -14,8 +14,9 @@ export default async function createDatabaseConnection() {
 
     await migrate(db, { migrationsFolder: "drizzle" });
 
-    return db;
+    return { db, connection };
   } catch (error) {
     console.error("ERROR", error);
+    process.exit(1);
   }
 }
