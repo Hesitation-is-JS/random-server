@@ -71,7 +71,6 @@ const router: FastifyPluginCallback = (
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
       const { id } = req.params as { id: string };
-      console.log(id);
 
       const data = await stateService.findAllForUser(id);
 
@@ -89,7 +88,6 @@ const router: FastifyPluginCallback = (
     // preHandler: clerkPreHandler,
     handler: async (req, rep) => {
       const { id } = req.params as { id: string };
-      console.log(id);
 
       const data = await taskService.findAllForUser(id);
 
