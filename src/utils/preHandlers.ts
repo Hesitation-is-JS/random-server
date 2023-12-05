@@ -1,14 +1,12 @@
 import { getAuth } from "@clerk/fastify";
 import { FastifyRequest, FastifyReply } from "fastify";
-import { HttpUnauthorized } from "./error";
+import { HttpUnauthorized } from "./error/http";
 
 export async function clerkPreHandler(
   req: FastifyRequest,
   _reply: FastifyReply,
   done: any
 ) {
-  console.log("test");
-
   const { sessionId } = getAuth(req);
 
   if (!sessionId) {
