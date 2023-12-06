@@ -2,6 +2,7 @@ import { users } from "../db/schema";
 import { ValidationSchema } from "../utils/interfaces";
 import { defaultSuccessSchema, findOneResponseSchema } from "../utils/schemas";
 
+export type User = typeof users.$inferSelect;
 export type CreateUser = typeof users.$inferInsert;
 export type UpdateUser = { theme?: "DARK" | "LIGHT" | null | undefined };
 

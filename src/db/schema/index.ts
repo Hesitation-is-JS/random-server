@@ -55,8 +55,12 @@ export const tasks = mysqlTable(
     title: varchar("title", { length: 256 }).notNull(),
     description: varchar("description", { length: 2000 }),
     dueDate: datetime("due_date"),
-    stateId: int("state_id").references(() => states.id),
-    categoryId: int("category_id").references(() => categories.id),
+    stateId: int("state_id")
+      .references(() => states.id)
+      .notNull(),
+    categoryId: int("category_id")
+      .references(() => categories.id)
+      .notNull(),
     createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
   },
@@ -94,8 +98,12 @@ export const tasksComments = mysqlTable(
   "tasks_comments",
   {
     id: int("id").primaryKey().autoincrement(),
-    userId: varchar("user_id", { length: 256 }).references(() => users.userId),
-    taskId: int("task_id").references(() => tasks.id),
+    userId: varchar("user_id", { length: 256 })
+      .references(() => users.userId)
+      .notNull(),
+    taskId: int("task_id")
+      .references(() => tasks.id)
+      .notNull(),
     content: varchar("content", { length: 256 }).notNull(),
     createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
