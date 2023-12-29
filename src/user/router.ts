@@ -99,6 +99,23 @@ const router: FastifyPluginCallback = (
   });
 
   fastify.route({
+    method: "GET",
+    url: "/:id/board",
+    schema: finUsersCategorySchema,
+    // preHandler: clerkPreHandler,
+    handler: async (req, rep) => {
+      const { id } = req.params as { id: string };
+
+      const data = await categoryService.findAllForUserWithData(id);
+
+      return rep.code(200).send({
+        message: `Found ${data?.length} tasks for user ${id}`,
+        data,
+      });
+    },
+  });
+
+  fastify.route({
     method: "POST",
     url: "/",
     schema: createUserSchema,
