@@ -5,7 +5,7 @@ import * as categoryService from "../category/service";
 import * as stateService from "../state/service";
 import * as taskService from "../task/service";
 import { clerkPreHandler } from "../utils/preHandlers";
-import { CreateUser, createUserSchema, finOneUserSchema } from "./schemas";
+import { finOneUserSchema, CreateUser } from "./schemas";
 import { HttpNotFound } from "../utils/error/http";
 import { findOneUserCommentSchema } from "../taskComments/schemas";
 import { finUsersCategorySchema } from "../category/schemas";
@@ -95,19 +95,6 @@ const router: FastifyPluginCallback = (
         message: `Found ${data?.length} tasks for user ${id}`,
         data,
       });
-    },
-  });
-
-  fastify.route({
-    method: "POST",
-    url: "/",
-    schema: createUserSchema,
-    // preHandler: clerkPreHandler,
-    handler: async (req, rep) => {
-      const body = req.body as CreateUser;
-
-      const data = await services.createOne(body);
-      return rep.code(201).send({ message: "User created successfully", data });
     },
   });
 
