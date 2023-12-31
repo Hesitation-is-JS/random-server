@@ -1,11 +1,9 @@
 export interface BaseSchema {
-  type: "object";
-  properties: {
-    [key: string]: {
-      type: "object" | "array" | "null" | "string" | "number" | "boolean";
-      format?: string;
-    };
+  type: "object" | "array" | "null" | "string" | "number" | "boolean";
+  properties?: {
+    [key: string]: BaseSchema;
   };
+  format?: string;
   required?: string[];
   additionalProperties?: boolean;
 }

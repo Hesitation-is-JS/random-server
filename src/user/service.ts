@@ -27,3 +27,10 @@ export async function updateOne(user: UpdateUser, id: string) {
 
   return await db?.update(users).set(user).where(eq(users.userId, id));
 }
+
+export async function deleteOne(id: string) {
+  if (!(await findOne(id)))
+    throw new HttpNotFound(`User with id ${id} was not found`);
+
+  return await db?.delete(users).where(eq(users.userId, id));
+}

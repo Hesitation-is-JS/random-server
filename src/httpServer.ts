@@ -55,6 +55,9 @@ export function createHttpServer(): FastifyInstance {
   fastify.register(import("./user/router"), {
     prefix: GLOBAL_PREFIX + "/user",
   });
+  fastify.register(import("./clerk/router"), {
+    prefix: GLOBAL_PREFIX + "/clerk",
+  });
   fastify.register(import("./category/router"), {
     prefix: GLOBAL_PREFIX + "/category",
   });
