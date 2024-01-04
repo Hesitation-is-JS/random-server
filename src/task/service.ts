@@ -1,5 +1,5 @@
 import { db } from "..";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, isNull, sql } from "drizzle-orm";
 import { tasks, usersTasks } from "../db/schema";
 import { CreateTask, UpdateTask } from "./schemas";
 import { HttpNotFound } from "../utils/error/http";
@@ -72,6 +72,20 @@ export async function findAllForUser(id: string) {
     .map((join) => join.tasks);
 
   return formatted;
+}
+
+export async function findSubtasks(parentId: number) {
+  const result = await db.query.tasks.findMany({
+    with: {
+      state: true,
+      category: true,
+      comments: true,
+    },
+    where: and(eq(tasks.parentId, parentId)),
+    orderBy: desc(sql.identifier("created_at")),
+  });
+
+  return result;
 }
 
 export async function updateOne(task: UpdateTask, id: number) {

@@ -83,6 +83,21 @@ export const findUsersTaskSchema: ValidationSchema = {
   response: findManyResponseSchema,
 };
 
+export const findSubTaskSchema: ValidationSchema = {
+  description: "This endpoint return all task's subtasks",
+  tags: ["user"],
+  summary: "Find all task's subtask",
+  params: {
+    type: "object",
+    properties: {
+      id: { type: "string" },
+    },
+    required: ["id"],
+    additionalProperties: false,
+  },
+  response: findManyResponseSchema,
+};
+
 export const updateTaskSchema: ValidationSchema = {
   description: "This endpoint handles the update of task records",
   tags: ["task"],
