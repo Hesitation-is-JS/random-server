@@ -8,6 +8,7 @@ import {
   createTaskSchema,
   findManyTaskSchema,
   findOneTaskSchema,
+  findSubTaskSchema,
   updateTaskSchema,
 } from "./schemas";
 import { HttpNotFound } from "../utils/error/http";
@@ -68,6 +69,22 @@ const router: FastifyPluginCallback = (
 
       return rep.code(200).send({
         message: `Found ${data?.length} comment for task ${id}`,
+        data,
+      });
+    },
+  });
+
+  fastify.route({
+    method: "GET",
+    url: "/:id/subtasks",
+    schema: findSubTaskSchema,
+    // preHandler: clerkPreHandler,
+    handler: async (req, rep) => {
+      const { id } = req.params as { id: number };
+      const data = await services.findSubtasks(id);
+
+      return rep.code(200).send({
+        message: `Found ${data?.length} subtasks for task ${id}`,
         data,
       });
     },
