@@ -115,6 +115,7 @@ async function createTask(
       parentId,
       title: faker.word.verb(),
       description: faker.finance.transactionDescription(),
+      dueDate: faker.date.future({ years: 1 }),
       stateId: faker.number.int({ min: 1, max: 6 }),
       categoryId: faker.number.int({ min: 1, max: 7 }),
     });
